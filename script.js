@@ -99,8 +99,8 @@ function showScores() {
 // create questions here
 var questions = [
   new Question("What is the process of finding errors and fixing them within a program?", ["Compiling", "Executing", "Debugging", "Scanning"], "Debugging"),
-  new Question("Inside which HTML element do we put the JavaScript", ["<scripting>", "<js>", "<javascript>", "<script>"], "<script>"),
-  new Question("What is the HTML element for line break?", ["<div>", "<a>", "<br>", "<link>"], "<br>"),
+  new Question("What does JS stand for?", ["June Sixth", "Javascript", "Jordan Sneakers", "Jumbled Syntax"], "Javascript"),
+  new Question("The acronym HTML stnad for what?", ["Hypertext Markup Language", "Hard To Manage Learning", "Help The Man Learn", "Hyper Text Making Language"], "Hypertext Markup Language"),
   new Question("The acronym CSS stands for what?", ["Cascading Style Sheets", "Carrot Sytem Style", "Correlated Styling System", "Canvas Styling System"], "Cascading Style Sheets"),
   new Question("What property do you use to set the background color of an image?", ["color", "background-color", "background:color", "color:background"], "background-color"),
 ];
