@@ -93,15 +93,16 @@ function showScores() {
   gameOverHTML += "<h2 id='score'> Your scores: " + quiz.score + "</h2>";
   var element = document.getElementById("quiz");
   element.innerHTML = gameOverHTML;
+  
 }
 
 // create questions here
 var questions = [
-  new Question("What is 2+2?", ["1", "2", "3", "4"], "4"),
-  new Question("", ["", "", "", ""], ""),
-  new Question("", ["", "", "", ""], ""),
-  new Question("", ["", "", "", ""], ""),
-  new Question("", [" ", " ", " ", ""], ""),
+  new Question("What is the process of finding errors and fixing them within a program?", ["Compiling", "Executing", "Debugging", "Scanning"], "Debugging"),
+  new Question("Inside which HTML element do we put the JavaScript", ["<scripting>", "<js>", "<javascript>", "<script>"], "<script>"),
+  new Question("What is the HTML element for line break?", ["<div>", "<a>", "<br>", "<link>"], "<br>"),
+  new Question("The acronym CSS stands for what?", ["Cascading Style Sheets", "Carrot Sytem Style", "Correlated Styling System", "Canvas Styling System"], "Cascading Style Sheets"),
+  new Question("What property do you use to set the background color of an image?", ["color", "background-color", "background:color", "color:background"], "background-color"),
 ];
 
 // create quiz
@@ -109,3 +110,4 @@ var quiz = new Quiz(questions);
 
 // display quiz
 populate();
+
