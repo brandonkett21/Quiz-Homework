@@ -1,143 +1,194 @@
-function startTimer(duration, display) {
-  var timer = duration,
-    minutes,
-    seconds;
-  setInterval(function () {
-    minutes = parseInt(timer / 60, 10);
-    seconds = parseInt(timer % 60, 10);
+var quizBody = document.getElementById("quiz");
+var resultsEl = document.getElementById("result");
+var finalScoreEl = document.getElementById("finalScore");
+var gameoverDiv = document.getElementById("gameover");
+var questionsEl = document.getElementById("questions");
+var quizTimer = document.getElementById("timer");
+var startQuizButton = document.getElementById("startbtn");
+var startQuizDiv = document.getElementById("startpage");
+var highscoreContainer = document.getElementById("highscoreContainer");
+var highscoreDiv = document.getElementById("high-scorePage");
+var highscoreInputName = document.getElementById("initials");
+var highscoreDisplayName = document.getElementById("highscore-initials");
+var endGameBtns = document.getElementById("endGameBtns");
+var submitScoreBtn = document.getElementById("submitScore");
+var highscoreDisplayScore = document.getElementById("highscore-score");
+var buttonA = document.getElementById("a");
+var buttonB = document.getElementById("b");
+var buttonC = document.getElementById("c");
+var buttonD = document.getElementById("d");
 
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
+var quizQuestions = [
+  {
+    question:
+      "What is the process of finding errors and fixing them within a program?",
+    choiceA: "Compiling",
+    choiceB: "Executing",
+    choiceC: "Debugging",
+    choiceD: "Scanning",
+    correctAnswer: "c",
+  },
+  {
+    question: "What does JS stand for?",
+    choiceA: "June Sixth",
+    choiceB: "Javascript",
+    choiceC: "Jordan Sneakers",
+    choiceD: "Jumbled Syntax",
+    correctAnswer: "b",
+  },
+  {
+    question: "What does HTML stand for?",
+    choiceA: "Hypertext Markup Language",
+    choiceB: "Hard To Manage Learning",
+    choiceC: "Help The Man Learn",
+    choiceD: "Hyper Text Making Language",
+    correctAnswer: "a",
+  },
+  {
+    question: "The acronym CSS stands for what?",
+    choiceA: "Carrot Stem Style",
+    choiceB: "Correlated Styling System",
+    choiceC: "Canvas Styling System",
+    choiceD: "Cascading Style Sheet",
+    correctAnswer: "d",
+  },
+  {
+    question:
+      "What property do you use to set the background color of an image?",
+    choiceA: "background-color",
+    choiceB: "color",
+    choiceC: "background:color",
+    choiceD: "color:background",
+    correctAnswer: "a",
+  },
+];
+var finalQuestionIndex = quizQuestions.length;
+var currentQuestionIndex = 0;
+var timeLeft = 76;
+var timerInterval;
+var score = 0;
+var correct;
 
-    display.textContent = minutes + ":" + seconds;
+function generateQuizQuestion() {
+  gameoverDiv.style.display = "none";
+  if (currentQuestionIndex === finalQuestionIndex) {
+    return showScore();
+  }
+  var currentQuestion = quizQuestions[currentQuestionIndex];
+  questionsEl.innerHTML = "<p>" + currentQuestion.question + "</p>";
+  buttonA.innerHTML = currentQuestion.choiceA;
+  buttonB.innerHTML = currentQuestion.choiceB;
+  buttonC.innerHTML = currentQuestion.choiceC;
+  buttonD.innerHTML = currentQuestion.choiceD;
+}
 
-    if (--timer < 0) {
-      timer = duration;
+function startQuiz() {
+  gameoverDiv.style.display = "none";
+  startQuizDiv.style.display = "none";
+  generateQuizQuestion();
+
+  timerInterval = setInterval(function () {
+    timeLeft--;
+    quizTimer.textContent = "Time left: " + timeLeft;
+
+    if (timeLeft === 0) {
+      clearInterval(timerInterval);
+      showScore();
     }
   }, 1000);
+  quizBody.style.display = "block";
 }
 
-window.onload = function () {
-  var fiveMinutes = 60 * 5,
-    display = document.querySelector("#time");
-  startTimer(fiveMinutes, display);
-};
-
-function Quiz(questions) {
-  this.score = 0;
-  this.questions = questions;
-  this.questionIndex = 0;
+function showScore() {
+  quizBody.style.display = "none";
+  gameoverDiv.style.display = "flex";
+  clearInterval(timerInterval);
+  highscoreInputName.value = "";
+  finalScoreEl.innerHTML =
+    "You got " + score + " out of " + quizQuestions.length + " correct!";
 }
 
-Quiz.prototype.getQuestionIndex = function () {
-  return this.questions[this.questionIndex];
-};
-
-Quiz.prototype.guess = function (answer) {
-  if (this.getQuestionIndex().isCorrectAnswer(answer)) {
-    this.score++;
-  }
-
-  this.questionIndex++;
-};
-
-Quiz.prototype.isEnded = function () {
-  return this.questionIndex === this.questions.length;
-};
-
-function Question(text, choices, answer) {
-  this.text = text;
-  this.choices = choices;
-  this.answer = answer;
-}
-
-Question.prototype.isCorrectAnswer = function (choice) {
-  return this.answer === choice;
-};
-
-function populate() {
-  if (quiz.isEnded()) {
-    showScores();
+submitScoreBtn.addEventListener("click", function highscore() {
+  if (highscoreInputName.value === "") {
+    alert("Initials cannot be blank");
+    return false;
   } else {
-    // show question
-    var element = document.getElementById("question");
-    element.innerHTML = quiz.getQuestionIndex().text;
+    var savedHighscores =
+      JSON.parse(localStorage.getItem("savedHighscores")) || [];
+    var currentUser = highscoreInputName.value.trim();
+    var currentHighscore = {
+      name: currentUser,
+      score: score,
+    };
 
-    // show options
-    var choices = quiz.getQuestionIndex().choices;
-    for (var i = 0; i < choices.length; i++) {
-      var element = document.getElementById("choice" + i);
-      element.innerHTML = choices[i];
-      guess("btn" + i, choices[i]);
-    }
+    gameoverDiv.style.display = "none";
+    highscoreContainer.style.display = "flex";
+    highscoreDiv.style.display = "block";
+    endGameBtns.style.display = "flex";
 
-    showProgress();
+    savedHighscores.push(currentHighscore);
+    localStorage.setItem("savedHighscores", JSON.stringify(savedHighscores));
+    generateHighscores();
+  }
+});
+
+function generateHighscores() {
+  highscoreDisplayName.innerHTML = "";
+  highscoreDisplayScore.innerHTML = "";
+  var highscores = JSON.parse(localStorage.getItem("savedHighscores")) || [];
+  for (i = 0; i < highscores.length; i++) {
+    var newNameSpan = document.createElement("li");
+    var newScoreSpan = document.createElement("li");
+    newNameSpan.textContent = highscores[i].name;
+    newScoreSpan.textContent = highscores[i].score;
+    highscoreDisplayName.appendChild(newNameSpan);
+    highscoreDisplayScore.appendChild(newScoreSpan);
   }
 }
 
-function guess(id, guess) {
-  var button = document.getElementById(id);
-  button.onclick = function () {
-    quiz.guess(guess);
-    populate();
-  };
+function showHighscore() {
+  startQuizDiv.style.display = "none";
+  gameoverDiv.style.display = "none";
+  highscoreContainer.style.display = "flex";
+  highscoreDiv.style.display = "block";
+  endGameBtns.style.display = "flex";
+
+  generateHighscores();
 }
 
-function showProgress() {
-  var currentQuestionNumber = quiz.questionIndex + 1;
-  var element = document.getElementById("progress");
-  element.innerHTML =
-    "Question " + currentQuestionNumber + " of " + quiz.questions.length;
+function clearScore() {
+  window.localStorage.clear();
+  highscoreDisplayName.textContent = "";
+  highscoreDisplayScore.textContent = "";
 }
 
-function showScores() {
-  var gameOverHTML = "<h1>Result</h1>";
-  gameOverHTML += "<h2 id='score'> Your scores: " + quiz.score + "</h2>";
-  var element = document.getElementById("quiz");
-  element.innerHTML = gameOverHTML;
+function replayQuiz() {
+  highscoreContainer.style.display = "none";
+  gameoverDiv.style.display = "none";
+  startQuizDiv.style.display = "flex";
+  timeLeft = 76;
+  score = 0;
+  currentQuestionIndex = 0;
 }
 
-// create questions here
-var questions = [
-  new Question(
-    "What is the process of finding errors and fixing them within a program?",
-    ["Compiling", "Executing", "Debugging", "Scanning"],
-    "Debugging"
-  ),
-  new Question(
-    "What does JS stand for?",
-    ["June Sixth", "Javascript", "Jordan Sneakers", "Jumbled Syntax"],
-    "Javascript"
-  ),
-  new Question(
-    "The acronym HTML stnad for what?",
-    [
-      "Hypertext Markup Language",
-      "Hard To Manage Learning",
-      "Help The Man Learn",
-      "Hyper Text Making Language",
-    ],
-    "Hypertext Markup Language"
-  ),
-  new Question(
-    "The acronym CSS stands for what?",
-    [
-      "Cascading Style Sheets",
-      "Carrot Sytem Style",
-      "Correlated Styling System",
-      "Canvas Styling System",
-    ],
-    "Cascading Style Sheets"
-  ),
-  new Question(
-    "What property do you use to set the background color of an image?",
-    ["color", "background-color", "background:color", "color:background"],
-    "background-color"
-  ),
-];
+function checkAnswer(answer) {
+  correct = quizQuestions[currentQuestionIndex].correctAnswer;
 
-// create quiz
-var quiz = new Quiz(questions);
+  if (answer === correct && currentQuestionIndex !== finalQuestionIndex) {
+    score++;
+    alert("That Is Correct!");
+    currentQuestionIndex++;
+    generateQuizQuestion();
+  } else if (
+    answer !== correct &&
+    currentQuestionIndex !== finalQuestionIndex
+  ) {
+    alert("That Is Incorrect.");
+    currentQuestionIndex++;
+    generateQuizQuestion();
+  } else {
+    showScore();
+  }
+}
 
-// display quiz
-populate();
+startQuizButton.addEventListener("click", startQuiz);
