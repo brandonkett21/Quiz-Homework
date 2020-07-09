@@ -1,23 +1,25 @@
 function startTimer(duration, display) {
-  var timer = duration, minutes, seconds;
+  var timer = duration,
+    minutes,
+    seconds;
   setInterval(function () {
-      minutes = parseInt(timer / 60, 10);
-      seconds = parseInt(timer % 60, 10);
+    minutes = parseInt(timer / 60, 10);
+    seconds = parseInt(timer % 60, 10);
 
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
 
-      display.textContent = minutes + ":" + seconds;
+    display.textContent = minutes + ":" + seconds;
 
-      if (--timer < 0) {
-          timer = duration;
-      }
+    if (--timer < 0) {
+      timer = duration;
+    }
   }, 1000);
 }
 
 window.onload = function () {
   var fiveMinutes = 60 * 5,
-      display = document.querySelector('#time');
+    display = document.querySelector("#time");
   startTimer(fiveMinutes, display);
 };
 
@@ -93,16 +95,45 @@ function showScores() {
   gameOverHTML += "<h2 id='score'> Your scores: " + quiz.score + "</h2>";
   var element = document.getElementById("quiz");
   element.innerHTML = gameOverHTML;
-  
 }
 
 // create questions here
 var questions = [
-  new Question("What is the process of finding errors and fixing them within a program?", ["Compiling", "Executing", "Debugging", "Scanning"], "Debugging"),
-  new Question("What does JS stand for?", ["June Sixth", "Javascript", "Jordan Sneakers", "Jumbled Syntax"], "Javascript"),
-  new Question("The acronym HTML stnad for what?", ["Hypertext Markup Language", "Hard To Manage Learning", "Help The Man Learn", "Hyper Text Making Language"], "Hypertext Markup Language"),
-  new Question("The acronym CSS stands for what?", ["Cascading Style Sheets", "Carrot Sytem Style", "Correlated Styling System", "Canvas Styling System"], "Cascading Style Sheets"),
-  new Question("What property do you use to set the background color of an image?", ["color", "background-color", "background:color", "color:background"], "background-color"),
+  new Question(
+    "What is the process of finding errors and fixing them within a program?",
+    ["Compiling", "Executing", "Debugging", "Scanning"],
+    "Debugging"
+  ),
+  new Question(
+    "What does JS stand for?",
+    ["June Sixth", "Javascript", "Jordan Sneakers", "Jumbled Syntax"],
+    "Javascript"
+  ),
+  new Question(
+    "The acronym HTML stnad for what?",
+    [
+      "Hypertext Markup Language",
+      "Hard To Manage Learning",
+      "Help The Man Learn",
+      "Hyper Text Making Language",
+    ],
+    "Hypertext Markup Language"
+  ),
+  new Question(
+    "The acronym CSS stands for what?",
+    [
+      "Cascading Style Sheets",
+      "Carrot Sytem Style",
+      "Correlated Styling System",
+      "Canvas Styling System",
+    ],
+    "Cascading Style Sheets"
+  ),
+  new Question(
+    "What property do you use to set the background color of an image?",
+    ["color", "background-color", "background:color", "color:background"],
+    "background-color"
+  ),
 ];
 
 // create quiz
@@ -110,4 +141,3 @@ var quiz = new Quiz(questions);
 
 // display quiz
 populate();
-
